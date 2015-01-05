@@ -6,4 +6,3 @@ namespace :smap do
     sourcemap.create_mapping
   end
 end
-task "assets:precompile" => ["smap:create_mapping"]
