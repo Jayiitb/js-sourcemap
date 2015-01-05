@@ -1,5 +1,5 @@
 namespace :smap do
-  sourcemap = Sourcemap::Build::Api.new
+  sourcemap = Sourcemap::Api.new
 
   desc "sourcemap map creation"
   task "create_mapping" => "assets:environment" do
