@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'sourcemap/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "sourcemap"
+  spec.name          = "js-sourcemap"
   spec.version       = Sourcemap::VERSION
   spec.authors       = ["Jayprakash"]
   spec.email         = ["jayprakashjay91@gmail.com"]
   spec.summary       = %q{sourcemap support for rails}
   spec.description   = %q{JS sourcemap support for rails}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/Jayiitb/js.sourcemap"
   spec.license       = "MIT"
 
   spec.add_development_dependency 'uglifier', '~> 2.6', '>= 2.6.1'
