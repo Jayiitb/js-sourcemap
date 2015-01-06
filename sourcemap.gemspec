@@ -9,12 +9,12 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jayprakash"]
   spec.email         = ["jayprakashjay91@gmail.com"]
   spec.summary       = %q{sourcemap support for rails}
-  spec.description   = %q{sourcemap support for rails}
+  spec.description   = %q{JS sourcemap support for rails}
   spec.homepage      = ""
   spec.license       = "MIT"
 
-  spec.add_development_dependency "uglifier", "~> 2.6.1"
-  spec.add_development_dependency "json"
+  spec.add_development_dependency 'uglifier', '~> 2.6', '>= 2.6.1'
+  spec.add_development_dependency 'json', '~> 0'
 
   spec.files         = Dir["{app,config,db,lib,tasks,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile"]
   # spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
