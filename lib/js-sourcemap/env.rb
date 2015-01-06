@@ -1,6 +1,6 @@
 require "json"
 
-module Sourcemap
+module JsSourcemap
   class Env
 
     attr_accessor :sources_dir, :domain

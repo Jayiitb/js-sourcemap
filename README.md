@@ -1,13 +1,13 @@
-# Sourcemap
+# JsSourcemap
 
-This helps in generating sourcemap for js files.
+This helps in generating js-sourcemap for js files.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'sourcemap'
+gem 'js-sourcemap'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install sourcemap
+    $ gem install js-sourcemap
 
 ## Usage
 
@@ -26,7 +26,7 @@ Done!
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/sourcemap/fork )
+1. Fork it ( https://github.com/[my-github-username]/js-sourcemap/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

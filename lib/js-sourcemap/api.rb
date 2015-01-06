@@ -1,13 +1,13 @@
-require "sourcemap/env"
+require "js-sourcemap/env"
 require "uglifier"
 require "find"
 
-module Sourcemap
+module JsSourcemap
 	class Api
 		EXTENSIONS = %w(.js)
 
 		def env
-			@env ||= ::Sourcemap::Env.new
+			@env ||= ::JsSourcemap::Env.new
 		end
 
 		def config
@@ -26,6 +26,10 @@ module Sourcemap
 		def generate_mapping
 			# empty_dirs
 			beginning_time = Time.now
+			if !File.exists?(env.sources_dir)
+				puts ">>> Directory #{env.sources_dir} doesn't exist"
+				return
+			end
 			Find.find(env.sources_dir) do |file|
 				if File.file?(file) and correct_file?(file)
 					smo = source_map_options file
@@ -55,7 +59,7 @@ module Sourcemap
 			f.write(min_content)
 			f.close
 
-			puts "=> writing sourcemap file : #{smo["source_map_path"]} ..."
+			puts "=> writing js-sourcemap file : #{smo["source_map_path"]} ..."
 			f = File.open(smo["source_map_path"], "w")
 			f.write(sourcem_content)
 			f.close
