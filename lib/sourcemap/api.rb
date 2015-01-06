@@ -23,7 +23,7 @@ module Sourcemap
 			@config = nil
 		end
 
-		def create_mapping
+		def generate_mapping
 			# empty_dirs
 			beginning_time = Time.now
 			Find.find(env.sources_dir) do |file|

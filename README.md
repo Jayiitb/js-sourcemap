@@ -1,6 +1,6 @@
 # Sourcemap
 
-TODO: Write a gem description
+This helps in generating sourcemap for js files.
 
 ## Installation
 
@@ -12,7 +12,7 @@ gem 'sourcemap'
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
@@ -20,7 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Change Source Directory and Domain in env.rb.
+run smap:generate_mapping
+Done!
 
 ## Contributing
 
