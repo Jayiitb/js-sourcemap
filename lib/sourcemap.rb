@@ -1,5 +1,5 @@
 require "sourcemap/version"
-require "sourcemap/build/api"
+require "sourcemap/api"
 
 module Sourcemap
 end
