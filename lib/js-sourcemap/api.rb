@@ -87,6 +87,12 @@ module JsSourcemap
 		def source_map_options(file)
 			a = Hash.new
 
+			mapping_dirpath = get_mapping_dir file
+			original_dirpath = get_original_dir file
+
+			FileUtils.mkpath(mapping_dirpath) unless File.exists?(mapping_dirpath) # creating new mapping dir
+			FileUtils.mkpath(original_dirpath) unless File.exists?(original_dirpath) # creating new original dir
+
 			a["minified_file_path"] = file # something-digest.js
 			a["original_file_path"] = original_file_path file  # something-digest-original.js
 			a["source_map_path"] = mapping_file_path file # something-digest.js.map
@@ -96,13 +102,23 @@ module JsSourcemap
 			a
 		end
 
-		def original_file_path(file)
+		def get_mapping_dir(file)
 			dirpath = File.dirname(file)
+			dirpath.gsub(/.*#{env.sources_dir}/,"#{env.mapping_dir}")  # new mapping dir
+		end
+
+		def get_original_dir(file)
+			dirpath = File.dirname(file)
+			dirpath.gsub(/.*#{env.sources_dir}/,"#{env.original_dir}")  # new mapping dir
+		end
+
+		def original_file_path(file)
+			dirpath = get_original_dir file
 			File.join(dirpath, File.basename(file,'.js')) + "-original.js"
 		end
 
 		def mapping_file_path(file)
-			dirpath = File.dirname(file)
+			dirpath = get_mapping_dir file
 			File.join(dirpath, File.basename(file)) + ".map"
 		end
 
