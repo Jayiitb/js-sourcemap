@@ -23,7 +23,7 @@ module JsSourcemap
 			@config = nil
 		end
 
-		def sync_to_s3
+		def sync_to_s3?
 			env.sourcemap_config.fetch("sync_to_s3") == "yes" || false
 		end
 
@@ -34,13 +34,12 @@ module JsSourcemap
 				puts ">>> Directory #{env.sources_dir} doesn't exist"
 				return
 			end
-			Find.find(env.sources_dir) do |file|
+			count = Find.find(env.sources_dir).count
+			Find.find(env.sources_dir).each_with_index do |file, i|
+				puts "#{i+1} of #{count} - #{file} ..........."
 				if File.file?(file) and correct_file?(file)
 					smo = source_map_options file
 					if mapping_creation_required?(file,smo)
-						# puts ">>>>>>>  minified_file_path : #{smo["minified_file_path"]}, original_file_path : #{smo["original_file_path"]} , source_map_path : #{smo["source_map_path"]}, source_map_file_absolute_path : #{smo["source_map_file_absolute_path"]}, original_file_absolute_path : #{smo["original_file_absolute_path"]}"
-						puts ">>>>>>> .................... >>>>>>>>>"
-
 						copy_source(smo)
 						#:source_url => "SourceUrl in minified", :source_map_url => "SourceMappingUrl in minified", :source_filename => "original_file_name_in_map", :source_root=> "lol4", :minified_file_path => "lol5", :input_source_map => "lol6"
 						uglified, source_map = Uglifier.new(:source_map_url => smo["source_map_file_absolute_path"], :source_filename => smo["original_file_absolute_path"]).compile_with_map(File.read(file))
@@ -49,7 +48,7 @@ module JsSourcemap
 				end
 			end
 			end_time = Time.now
-			puts "................... Completed ..................."
+			puts ".... Completed ......"
 			puts "Time elapsed #{(end_time - beginning_time)*1000} milliseconds"
 		end
 
@@ -128,6 +127,44 @@ module JsSourcemap
 
 		def mapping_creation_required?(file,smo)
 			return !(File.exists?(smo["original_file_path"]) and File.exists?(smo["source_map_path"]))
+		end
+
+		def sync_to_s3
+			if sync_to_s3?
+			  if asset_prefix = Rails.application.config.assets.prefix
+			    puts "starting sync to s3 bucket"
+			    puts "s3cmd sync -r private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5"
+			    if system("s3cmd sync -r private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5")
+			      puts "successfully synced assets to s3"
+			    else
+			      puts "Failed to sync asets to s3"
+			    end
+			  else
+			    puts "assets host not specified in application configuration"
+			  end
+			else
+			  puts "Syncing to s3 disabled as per sourcemap configuration"
+			end
+		end
+
+		def clean_unused_files
+			files = Dir[File.join(env.mapping_dir,"**","*.map")]
+			files.each_with_index do |file,i|
+				if env.manifest[get_relative_path(file)].nil?
+					remove_files(file)
+				end
+			end
+		end
+
+		def remove_files(file)
+			original_file = file.gsub(/\.js\.map/,'-original.js')
+			puts "removing #{file} && #{original_file}"
+			File.unlink(file) if File.exists?(file)
+			File.unlink(original_file) if File.exists?(original_file)
+		end
+
+		def get_relative_path(file)
+			file.gsub(/.*(#{env.mapping_dir}\/|#{env.original_dir}\/)/,'').gsub(/\.map/,'')
 		end
 
 	end
