@@ -23,6 +23,10 @@ module JsSourcemap
 			@config = nil
 		end
 
+		def sync_to_s3
+			env.sourcemap_config.fetch("sync_to_s3") == "yes" || false
+		end
+
 		def generate_mapping
 			# empty_dirs
 			beginning_time = Time.now
