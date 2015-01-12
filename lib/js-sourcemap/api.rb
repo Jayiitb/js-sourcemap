@@ -133,8 +133,8 @@ module JsSourcemap
 			if sync_to_s3?
 			  if asset_prefix = Rails.application.config.assets.prefix
 			    puts "starting sync to s3 bucket"
-			    puts "s3cmd sync -r private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5"
-			    if system("s3cmd sync -r private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5")
+			    puts "s3cmd sync -r --delete-removed --skip-existing private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5"
+			    if system("s3cmd sync -r --delete-removed --skip-existing private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5")
 			      puts "successfully synced assets to s3"
 			    else
 			      puts "Failed to sync asets to s3"
