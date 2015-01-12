@@ -1,0 +1,10 @@
+domain: "http://domain_name/tmp/assets"
+sync_to_s3: "yes"
+privateassets_bucket_name : "devassets-housing"
+mapping_directory: "public/tmp" # public url
+original_directory: "public/tmp" # public url
+
+
+# for private url
+# mapping_directory: "private" # private url
+# domain: "http://domain_name/private/assets"
