@@ -7,7 +7,7 @@ This helps in generating js-sourcemap for js files.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'js-sourcemap'
+gem 'js-sourcemap', "0.0.4"
 ```
 
 And then execute:
@@ -20,8 +20,23 @@ Or install it yourself as:
 
 ## Usage
 
-Change Source Directory and Domain in env.rb.
-run smap:generate_mapping
+Copy and paste the sourcemap.yml.sample file as sourcemap.yml in the project, sourcemap is to be integrated.
+Sourcemap.yml file contains all the config that needs to be done for sourcemapping.
+
+For generating sourcemap, run task:
+
+	bundle exec rake smap:generate_mapping
+
+
+For cleaning of unused files, run:
+
+	bundle exec rake smap:clean
+
+
+For syncing the generated map and original files to s3, run:
+
+	bundle exec rake smap:sync_to_s3
+
 Done!
 
 ## Contributing
