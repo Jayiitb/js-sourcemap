@@ -58,7 +58,8 @@ module JsSourcemap
 
     def build_absolute_path(path)
         path = path.gsub(/.*(#{self.sources_dir}\/|#{self.mapping_dir}\/|#{self.original_dir}\/)/,'')
-        "#{self.domain}/#{path}"
+        path = "#{Rails.application.config.assets.prefix}/#{path}"
+        "#{self.domain}#{path}"
     end
 
   end
