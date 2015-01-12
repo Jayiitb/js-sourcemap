@@ -8,11 +8,10 @@ module JsSourcemap
 
     def initialize
       self.sources_dir = rails_path "public#{Rails.application.config.assets.prefix}"
-      self.mapping_dir = rails_path "private#{Rails.application.config.assets.prefix}"
-      self.original_dir = rails_path "private#{Rails.application.config.assets.prefix}"
-      # keep both dir mapping_dir and original_dir either public or private
-      self.is_build_dir_private = true # false when build_dir is public/assets or app/assets or vendor/assets or lib/assets
       self.sourcemap_yml = rails_path "config/sourcemap.yml"
+      self.mapping_dir = rails_path "#{sourcemap_config.fetch "mapping_directory"}#{Rails.application.config.assets.prefix}"
+      self.original_dir = rails_path "#{sourcemap_config.fetch "original_directory"}#{Rails.application.config.assets.prefix}"
+      # keep both dir mapping_dir and original_dir either public or private
       self.domain = sourcemap_config.fetch "domain"
       self.manifest = get_manifest_file
     end
@@ -58,13 +57,8 @@ module JsSourcemap
     end
 
     def build_absolute_path(path)
-      if self.is_build_dir_private
-        path = path.gsub(/.*(#{Rails.root}\/)/,'')
-        "#{self.domain}#{path}"
-      else
-        path = path.gsub(/.*(#{self.sources_dir}\/|#{Rails.root}\/|#{self.mapping_dir}\/|#{self.original_dir}\/)/,'')
-        "#{self.domain}assets/#{path}"
-      end
+        path = path.gsub(/.*(#{self.sources_dir}\/|#{self.mapping_dir}\/|#{self.original_dir}\/)/,'')
+        "#{self.domain}/#{path}"
     end
 
   end
