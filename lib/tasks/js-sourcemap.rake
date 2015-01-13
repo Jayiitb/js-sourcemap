@@ -15,4 +15,9 @@ namespace :smap do
   task :clean => :environment do
     sm.clean_unused_files
   end
+
+  desc "generate, clean and sync files to s3"
+  task :complete_build => :environment do
+    sm.complete_build
+  end
 end

@@ -160,5 +160,11 @@ module JsSourcemap
 			file.gsub(/.*(#{env.mapping_dir}\/)/,'').gsub(/\.map/,'')
 		end
 
+		def complete_build
+			generate_mapping
+			clean_unused_files
+			sync_to_s3
+		end
+
 	end
 end

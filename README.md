@@ -37,6 +37,10 @@ For syncing the generated map and original files to s3, run:
 
 	bundle exec rake smap:sync_to_s3
 
+Or else do all at once (map generation,cleanup & syncing), with:
+
+	bundle exec rake smap:complete_build
+
 Done!
 
 ## Contributing
