@@ -4,10 +4,8 @@ privateassets_bucket_name : "devassets-housing"
 #for public repo
 # domain: "https://assets-sources.housingcdn.com/tmp" # without trailing slash
 # mapping_directory: "public/tmp" # public path
-# original_directory: "public/tmp" # public path
 
 #for private repo
 domain: "https://assets-sources.housingcdn.com/private" # without trailing slash
 mapping_directory: "private" # private path
-original_directory: "private" # private path
 

@@ -3,15 +3,13 @@ require "json"
 module JsSourcemap
   class Env
 
-    attr_accessor :sources_dir, :domain, :mapping_dir, :original_dir, :is_build_dir_private, :sourcemap_yml, :manifest
+    attr_accessor :sources_dir, :domain, :mapping_dir, :is_build_dir_private, :sourcemap_yml, :manifest
 
 
     def initialize
       self.sources_dir = rails_path "public#{Rails.application.config.assets.prefix}"
       self.sourcemap_yml = rails_path "config/sourcemap.yml"
       self.mapping_dir = rails_path "#{sourcemap_config.fetch "mapping_directory"}#{Rails.application.config.assets.prefix}"
-      self.original_dir = rails_path "#{sourcemap_config.fetch "original_directory"}#{Rails.application.config.assets.prefix}"
-      # keep both dir mapping_dir and original_dir either public or private
       self.domain = sourcemap_config.fetch "domain"
       self.manifest = get_manifest_file
     end
@@ -57,7 +55,7 @@ module JsSourcemap
     end
 
     def build_absolute_path(path)
-        path = path.gsub(/.*(#{self.sources_dir}\/|#{self.mapping_dir}\/|#{self.original_dir}\/)/,'')
+        path = path.gsub(/.*(#{self.sources_dir}\/|#{self.mapping_dir}\/)/,'')
         path = "#{Rails.application.config.assets.prefix}/#{path}"
         "#{self.domain}#{path}"
     end

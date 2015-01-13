@@ -91,10 +91,8 @@ module JsSourcemap
 			a = Hash.new
 
 			mapping_dirpath = get_mapping_dir file
-			original_dirpath = get_original_dir file
 
 			FileUtils.mkpath(mapping_dirpath) unless File.exists?(mapping_dirpath) # creating new mapping dir
-			FileUtils.mkpath(original_dirpath) unless File.exists?(original_dirpath) # creating new original dir
 
 			a["minified_file_path"] = file # something-digest.js
 			a["original_file_path"] = original_file_path file  # something-digest-original.js
@@ -110,13 +108,8 @@ module JsSourcemap
 			dirpath.gsub(/.*#{env.sources_dir}/,"#{env.mapping_dir}")  # new mapping dir
 		end
 
-		def get_original_dir(file)
-			dirpath = File.dirname(file)
-			dirpath.gsub(/.*#{env.sources_dir}/,"#{env.original_dir}")  # new mapping dir
-		end
-
 		def original_file_path(file)
-			dirpath = get_original_dir file
+			dirpath = get_mapping_dir file
 			File.join(dirpath, File.basename(file,'.js')) + "-original.js"
 		end
 
@@ -133,8 +126,8 @@ module JsSourcemap
 			if sync_to_s3?
 			  if asset_prefix = Rails.application.config.assets.prefix
 			    puts "starting sync to s3 bucket"
-			    puts "s3cmd sync -r --delete-removed --skip-existing private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5"
-			    if system("s3cmd sync -r --delete-removed --skip-existing private#{asset_prefix}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5")
+			    puts "s3cmd sync -r --delete-removed --skip-existing #{env.mapping_dir}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5"
+			    if system("s3cmd sync -r --delete-removed --skip-existing #{env.mapping_dir}/ s3://#{env.sourcemap_config.fetch("privateassets_bucket_name")}#{asset_prefix}/ --acl-private --no-check-md5")
 			      puts "successfully synced assets to s3"
 			    else
 			      puts "Failed to sync asets to s3"
@@ -164,7 +157,7 @@ module JsSourcemap
 		end
 
 		def get_relative_path(file)
-			file.gsub(/.*(#{env.mapping_dir}\/|#{env.original_dir}\/)/,'').gsub(/\.map/,'')
+			file.gsub(/.*(#{env.mapping_dir}\/)/,'').gsub(/\.map/,'')
 		end
 
 	end
