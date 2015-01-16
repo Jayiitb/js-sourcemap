@@ -7,7 +7,7 @@ This helps in generating js-sourcemap for js files.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'js-sourcemap', "0.0.5"
+gem 'js-sourcemap'
 ```
 
 And then execute:
