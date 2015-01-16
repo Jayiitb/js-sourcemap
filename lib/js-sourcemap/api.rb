@@ -34,8 +34,9 @@ module JsSourcemap
 				puts ">>> Directory #{env.sources_dir} doesn't exist"
 				return
 			end
-			count = Find.find(env.sources_dir).count
-			Find.find(env.sources_dir).each_with_index do |file, i|
+			files = Dir[File.join(env.sources_dir,"**","*.js")]
+			count = files.count
+			files.each_with_index do |file, i|
 				puts "#{i+1} of #{count} - #{file} ..........."
 				if File.file?(file) and correct_file?(file)
 					smo = source_map_options file
@@ -43,20 +44,21 @@ module JsSourcemap
 						copy_source(smo)
 						#:source_url => "SourceUrl in minified", :source_map_url => "SourceMappingUrl in minified", :source_filename => "original_file_name_in_map", :source_root=> "lol4", :minified_file_path => "lol5", :input_source_map => "lol6"
 						uglified, source_map = Uglifier.new(:source_map_url => smo["source_map_file_absolute_path"], :source_filename => smo["original_file_absolute_path"]).compile_with_map(File.read(file))
-						create_min_map_gz(smo,uglified,source_map)
+						create_min_map(smo,uglified,source_map)
 					end
 				end
 			end
+			create_js_gz
 			end_time = Time.now
 			puts ".... Completed ......"
-			puts "Time elapsed #{(end_time - beginning_time)*1000} milliseconds"
+			puts "Time elapsed #{((end_time - beginning_time)/60.0).round(3)} minutes"
 		end
 
 		def correct_file?(file)
-			return (File.extname(file) == ".js" and !(file=~/-original\.js/))
+			return (File.extname(file) == ".js")
 		end
 
-		def create_min_map_gz(smo, min_content,sourcem_content)
+		def create_min_map(smo, min_content,sourcem_content)
 			puts "=> writing minified file : #{smo["minified_file_path"]} ..."
 			f = File.open(smo["minified_file_path"], "w")
 			f.write(min_content)
@@ -67,9 +69,12 @@ module JsSourcemap
 			f.write(sourcem_content)
 			f.close
 
-			gz_file = "#{smo["minified_file_path"]}"
-			puts "=> gzip minified file: #{gzname(gz_file)}"
-			%x(gzip -c -9 "#{gz_file}" > "#{gzname(gz_file)}") if compress?(gz_file)
+		end
+
+		def create_js_gz
+			puts "=> gziping js files"
+			%x(for f in `find "#{env.sources_dir}" -name '*.js'`; do gzip -c -9 "$f" > "$f".gz; done)
+			# %x(gzip -c -9 "#{gz_file}" > "#{gzname(gz_file)}") if compress?(gz_file)
 		end
 
 		def compress?(file)
