@@ -43,7 +43,7 @@ module JsSourcemap
 					if mapping_creation_required?(file,smo)
 						copy_source(smo)
 						#:source_url => "SourceUrl in minified", :source_map_url => "SourceMappingUrl in minified", :source_filename => "original_file_name_in_map", :source_root=> "lol4", :minified_file_path => "lol5", :input_source_map => "lol6"
-						uglified, source_map = Uglifier.new(:source_map_url => smo["source_map_file_absolute_path"], :source_filename => smo["original_file_absolute_path"], :mangle =>{:toplevel=>true,:sort=>true,:eval=>true}, :output => {:comments => :copyright}).compile_with_map(File.read(file))
+						uglified, source_map = Uglifier.new(:source_map_url => smo["source_map_file_absolute_path"], :source_filename => smo["original_file_absolute_path"], :output => {:comments => :copyright}).compile_with_map(File.read(file))
 						create_min_map(smo,uglified,source_map)
 					end
 				end
